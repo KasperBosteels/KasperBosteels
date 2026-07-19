@@ -1,0 +1,27 @@
+name: Update GitLab Stats
+on:
+  schedule:
+    - cron: '0 0 * * *' # Runs daily
+  workflow_dispatch: # Allows manual triggering
+
+jobs:
+  update-stats:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Fetch GitLab Stats
+        run: |
+          # Fetch total commits (example)
+          COMMITS=$(curl -s "https://gitlab.com/api/v4/users/20097274/events?action=push&per_page=1" | jq '.length')
+          echo "GITLAB_COMMITS=$COMMITS" >> $GITHUB_ENV
+
+      - name: Update README
+        run: |
+          sed -i "s/GITLAB_COMMITS=[0-9]*/GITLAB_COMMITS=$GITLAB_COMMITS/" README.md
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "actions@github.com"
+          git add README.md
+          git commit -m "Update GitLab stats"
+          git push
