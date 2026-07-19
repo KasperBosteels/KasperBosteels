@@ -4,4 +4,4 @@
 
 ### 📊 My GitLab Stats
 - Commits: GITLAB_COMMITS=0
-- Merge Requests: GITLAB_MRS=0
+- Merge Requests: GITLAB_MRS=1
